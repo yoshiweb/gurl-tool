@@ -1,0 +1,21 @@
+{
+  "name": "pcurl",
+  "version": "1.0.0",
+  "description": "サイトのHTMLを保存するツール",
+  "main": "pcurl.js",
+  "bin": {
+    "pcurl": "./pcurl.js"
+  },
+  "scripts": {
+    "start": "node pcurl.js",
+    "postinstall": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.41.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "license": "MIT",
+  "private": true
+}
