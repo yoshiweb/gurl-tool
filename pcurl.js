@@ -33,15 +33,16 @@ if (!targetUrl) {
 
     // --- ファイル名生成 (URL全体を使用するロジックに変更) ---
     const urlObj = new URL(targetUrl);
-    
-    // ホスト名とパスを連結 (例: antigravity.google/docs/foo)
-    let safeName = urlObj.hostname + urlObj.pathname;
 
-    // 既存の拡張子(.htmlなど)があれば一旦除去（二重付与防止）
-    safeName = safeName.replace(/\.(html|htm|php|jsp|asp)$/i, '');
+    // URL全体（プロトコルを含む）をベースにする
+    let safeName = urlObj.href;
 
-    // スラッシュ(/)をアンダースコア(_)に置換
-    safeName = safeName.replace(/\//g, '_');
+    // クエリパラメータ（?以降）やハッシュ（#以降）を考慮して拡張子を除去するための正規表現
+    // ドット、指定の拡張子、その後に「文字列の終わり」または「?」か「#」が続く部分にマッチさせます
+    safeName = safeName.replace(/\.(html|htm|php|jsp|asp)(?=$|\?|#)/i, '');
+
+    // コロン(:)、スラッシュ(/)、クエスチョン(?)、アンパサンド(&)、イコール(=)、ハッシュ(#)をアンダースコア(_)に置換
+    safeName = safeName.replace(/[:\/?&=#]/g, '_');
 
     // 連続するアンダースコアを整理 & 末尾整理
     safeName = safeName.replace(/_+/g, '_').replace(/^_|_$/g, '');
@@ -49,8 +50,21 @@ if (!targetUrl) {
     // 万が一空ならindex
     if (!safeName) safeName = 'index';
 
-    // 必ず .html を付与
-    const filename = `${safeName}.html`;
+    // 現在日時の取得とフォーマット (yyyyMMdd-HHmmss.SSS)
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const MM = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const HH = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    const SSS = String(now.getMilliseconds()).padStart(3, '0');
+
+    // ハイフンやドットを含めたタイムスタンプ文字列の生成
+    const timestamp = `-${yyyy}${MM}${dd}-${HH}${mm}${ss}.${SSS}`;
+
+    // 必ず .html を付与し、その直前にタイムスタンプを結合
+    const filename = `${safeName}${timestamp}.html`;
     // -------------------------------------------------------
 
     fs.writeFileSync(filename, html);

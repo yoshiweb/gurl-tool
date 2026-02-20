@@ -51,11 +51,11 @@ npm link
 ターミナルを開き、`pcurl` の後に保存したいURLを入力してEnterキーを押します。
 
 ```bash
-pcurl https://antigravity.google/docs/agent-modes-settings
+pcurl "https://example.com/page?id=1&name=test"
 ```
 
 **実行結果:**
-成功すると、現在のフォルダに `agent-modes-settings.html` というファイルが保存されます。
+成功すると、現在のフォルダに `https_example.com_page_id_1_name_test-20260220-091912.014.html` というファイルが保存されます。
 
 ### ファイル名について
 
